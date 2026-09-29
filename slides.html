@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💈 Barber Booking — OOP Mini Project Slides</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: { gold: '#C9A227', charcoal: '#141414', card: '#1d1d1f' },
+      fontFamily: { sans: ['Segoe UI', 'Tahoma', 'sans-serif'] }
+    }
+  }
+};
+</script>
+<style>
+  body { font-family: 'Segoe UI', Tahoma, sans-serif; }
+  .slide { display: none; animation: fade .3s ease; min-height: 78vh; }
+  .slide.active { display: flex; flex-direction: column; justify-content: center; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .code-chip { font-family: Consolas, 'Courier New', monospace; font-size: 12px; background: #09090b; color: #fbbf24; border: 1px solid rgba(201,162,39,.5); border-radius: 8px; padding: 1px 8px; white-space: nowrap; }
+  .tick { color: #4ade80; font-weight: bold; }
+  @media print {
+    .no-print { display: none !important; }
+    .slide { display: block !important; page-break-after: always; border: 1px solid #ddd; }
+    body { background: #fff !important; }
+  }
+</style>
+</head>
+<body class="min-h-screen bg-gradient-to-b from-black via-zinc-900 to-black text-zinc-100">
+
+<!-- Progress -->
+<div class="fixed left-0 top-0 z-50 h-1 w-full bg-zinc-800">
+  <div id="progress" class="h-1 bg-gold transition-all" style="width:12.5%"></div>
+</div>
+
+<div class="mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center px-4 py-6 md:px-8">
+  <!-- Top bar -->
+  <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <div class="text-sm font-bold tracking-wide text-gold">💈 BARBER BOOKING <span class="font-normal text-zinc-400">| OOP Mini Project Slides</span></div>
+    <div class="no-print flex items-center gap-2 text-sm">
+      <span id="counter" class="rounded-full border border-gold/50 px-3 py-1 text-gold">1 / 8</span>
+      <button onclick="toggleFull()" class="rounded-full border border-zinc-600 px-3 py-1 hover:bg-zinc-800" title="เต็มจอ">⛶</button>
+      <button onclick="window.print()" class="rounded-full border border-zinc-600 px-3 py-1 hover:bg-zinc-800" title="พิมพ์เป็น PDF">🖨️ PDF</button>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 1 : COVER ============ -->
+  <section class="slide active rounded-2xl border border-gold/40 bg-card p-8 text-center shadow-2xl md:p-12">
+    <div class="text-6xl">💈</div>
+    <h1 class="mt-3 text-4xl font-extrabold tracking-wide text-gold md:text-5xl">BARBER BOOKING</h1>
+    <p class="mt-2 text-lg text-zinc-300">ระบบจองคิวร้านตัดผม <span class="text-zinc-500">— Barber Queue Booking System</span></p>
+    <p class="mx-auto mt-4 max-w-2xl text-sm leading-6 text-zinc-400">Mini Project: การเขียนโปรแกรมเชิงวัตถุ (OOP) • TypeScript + HTML + Tailwind + GUI ใช้งานได้จริง<br>แก้ปัญหาคิวชน โทรจองวุ่นวาย → จองผ่านตารางคิวว่างแบบเรียลไทม์</p>
+    <div class="mx-auto mt-6 grid max-w-lg gap-2 text-left text-sm">
+      <div class="rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3">👨‍💻 นาย อภิรักษ์ อนุรักษ์ <span class="float-right text-gold">68025517</span></div>
+      <div class="rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3">👨‍💻 นาย วัชพรงษ์ พรหมสวัสดิ์ <span class="float-right text-gold">68023470</span></div>
+    </div>
+    <div class="mt-6 flex justify-center gap-2 text-sm">
+      <span class="rounded-full bg-gold px-4 py-1.5 font-bold text-black">6 Classes</span>
+      <span class="rounded-full border border-gold/60 px-4 py-1.5 text-gold">OOP ครบ 4 หลัก</span>
+      <span class="rounded-full border border-zinc-600 px-4 py-1.5 text-zinc-300">GUI ใช้งานได้จริง</span>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 2 : SYSTEM ============ -->
+  <section class="slide rounded-2xl border border-zinc-800 bg-card p-8 shadow-xl">
+    <h2 class="text-2xl font-extrabold text-gold">1️⃣ ระบบคืออะไร <span class="text-sm font-normal text-zinc-400">What is this system?</span></h2>
+    <div class="mt-4 grid gap-4 md:grid-cols-2">
+      <div class="rounded-xl border border-zinc-700 bg-zinc-900 p-4">
+        <h3 class="font-bold text-zinc-100">💡 โจทย์ปัญหา (Problem)</h3>
+        <ul class="mt-2 space-y-1 text-sm text-zinc-300">
+          <li>• ร้านตัดผมรับจองทางโทรศัพท์ → <b>คิวชน จำเวลาผิด</b></li>
+          <li>• ไม่รู้ว่าช่างคนไหนว่างตอนไหน</li>
+          <li>• แอดมินสรุปรายได้/ค้นหาคิวยาก</li>
+        </ul>
+        <h3 class="mt-3 font-bold text-zinc-100">✅ ทางแก้ของเรา (Solution)</h3>
+        <p class="mt-1 text-sm text-zinc-300">เว็บจองคิว <b>เห็นตารางว่างรายช่าง–รายเวลา</b> กดช่องเขียวจองได้เลย กันจองชนอัตโนมัติ + ฝั่งแอดมินจัดการสถานะคิว</p>
+      </div>
+      <div class="rounded-xl border border-zinc-700 bg-zinc-900 p-4">
+        <h3 class="font-bold text-zinc-100">👥 ผู้ใช้ 2 ฝั่ง (Users)</h3>
+        <ul class="mt-2 space-y-1 text-sm text-zinc-300">
+          <li>👤 <b>ลูกค้า:</b> ดูตาราง → กรอกฟอร์ม → จอง (ไม่ต้อง login)</li>
+          <li>🛠️ <b>แอดมิน:</b> ใส่ PIN <span class="code-chip">123456</span> → รับตัด / เสร็จ / ยกเลิก / ลบ / ค้นหา / ดูรายได้</li>
+        </ul>
+        <h3 class="mt-3 font-bold text-zinc-100">🧰 Tech Stack</h3>
+        <p class="mt-1 text-sm text-zinc-300">HTML + Tailwind CDN + TypeScript (OOP 6 คลาส) + localStorage</p>
+        <p class="mt-1 text-sm text-zinc-400">ข้อมูลตั้งต้น <span class="code-chip">main.ts:8-21</span> — 3 บริการ (120฿/80฿/200฿), 4 ช่าง, 20 slot 10:00–19:30</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 3 : CUSTOMER FEATURES ============ -->
+  <section class="slide rounded-2xl border border-zinc-800 bg-card p-8 shadow-xl">
+    <h2 class="text-2xl font-extrabold text-gold">2️⃣ ฟีเจอร์ฝั่งลูกค้า <span class="text-sm font-normal text-zinc-400">Customer Features</span></h2>
+    <div class="mt-4 grid gap-3 text-sm md:grid-cols-2">
+      <div class="rounded-xl border border-zinc-700 bg-zinc-900 p-4">🗓️ <b>ตารางคิวว่างรายช่าง–รายเวลา</b><br><span class="text-zinc-400">เขียว = ว่าง (กดได้) / ชมพู = ไม่ว่าง</span><br><span class="code-chip">main.ts:134-152 renderSlotGrid()</span></div>
+      <div class="rounded-xl border border-zinc-700 bg-zinc-900 p-4">👆 <b>กดช่องว่างเติมฟอร์มอัตโนมัติ</b><br><span class="text-zinc-400">เลือกช่าง + เวลาให้เอง แล้วเลื่อนไปปุ่มจอง</span><br><span class="code-chip">main.ts:153-165 slotGrid click</span></div>
+      <div class="rounded-xl border border-zinc-700 bg-zinc-900 p-4">🛡️ <b>กันจองชน + ตรวจฟอร์ม</b><br><span class="text-zinc-400">ชื่อห้ามว่าง, เบอร์ 9–10 หลัก, ห้ามย้อนหลัง, ชน alert ทันที</span><br><span class="code-chip">main.ts:261-278</span> → <span class="code-chip">BarberShop.ts:38-46</span></div>
+      <div class="rounded-xl border border-zinc-700 bg-zinc-900 p-4">💾 <b>จำคิว + จำธีม (ไม่หายเมื่อรีเฟรช)</b><br><span class="text-zinc-400">คิวลง localStorage, ธีมมืด/สว่างจำค่าไว้</span><br><span class="code-chip">main.ts:175-207</span> <span class="code-chip">main.ts:45-74</span></div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 4 : ADMIN FEATURES ============ -->
+  <section class="slide rounded-2xl border border-zinc-800 bg-card p-8 shadow-xl">
+    <h2 class="text-2xl font-extrabold text-gold">3️⃣ ฟีเจอร์ฝั่งแอดมิน + เสริม <span class="text-sm font-normal text-zinc-400">Admin & Extras</span></h2>
+    <div class="mt-4 grid gap-3 text-sm md:grid-cols-2">
+      <div class="rounded-xl border border-zinc-700 bg-zinc-900 p-4">🔐 <b>PIN Gate 6 หลัก</b> <span class="code-chip">123456</span><br><span class="text-zinc-400">ผิด → error + focus ใหม่, มีปุ่ม 🔒 ล็อค</span><br><span class="code-chip">main.ts:210-258</span></div>
+      <div class="rounded-xl border border-zinc-700 bg-zinc-900 p-4">🔄 <b>วงจรสถานะคิว 4 ขั้น</b><br><span class="text-zinc-400">รอยืนยัน → กำลังตัด → เสร็จแล้ว / ยกเลิก + ลบ + ล้างคิวจบ</span><br><span class="code-chip">main.ts:318-337</span></div>
+      <div class="rounded-xl border border-zinc-700 bg-zinc-900 p-4">🔍 <b>ค้นหา + สรุปรายได้</b><br><span class="text-zinc-400">ค้นชื่อ/ช่าง/บริการ/วันที่ • รายได้ = ผลรวมคิวที่ “เสร็จแล้ว”</span><br><span class="code-chip">BarberShop.ts:48-57</span> <span class="code-chip">BarberShop.ts:70-74</span></div>
+      <div class="rounded-xl border border-zinc-700 bg-zinc-900 p-4">🌙☀️ <b>โหมดมืด/สว่าง + Responsive</b><br><span class="text-zinc-400">ปุ่ม #themeToggle จำค่า barber-theme, ตาม prefers-color-scheme</span><br><span class="code-chip">index.html:44</span> <span class="code-chip">styles.css:28+</span></div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 5 : CLASS DESIGN ============ -->
+  <section class="slide rounded-2xl border border-zinc-800 bg-card p-8 shadow-xl">
+    <h2 class="text-2xl font-extrabold text-gold">4️⃣ การออกแบบคลาส <span class="text-sm font-normal text-zinc-400">6 Classes — เกินเกณฑ์ ≥5</span></h2>
+    <div class="mt-3 flex flex-wrap items-center justify-center gap-2 text-xs font-bold">
+      <span class="rounded-lg border border-gold/60 bg-zinc-900 px-3 py-2">Person <span class="text-gold">abstract</span></span>
+      <span class="text-gold">◀ extends</span>
+      <span class="rounded-lg border border-zinc-600 bg-zinc-900 px-3 py-2">Customer</span>
+      <span class="rounded-lg border border-zinc-600 bg-zinc-900 px-3 py-2">Barber</span>
+      <span class="rounded-lg border border-zinc-600 bg-zinc-900 px-3 py-2">Service</span>
+      <span class="rounded-lg border border-zinc-600 bg-zinc-900 px-3 py-2">Booking</span>
+      <span class="rounded-lg border border-gold/60 bg-zinc-900 px-3 py-2">BarberShop <span class="text-zinc-400">manager</span></span>
+    </div>
+    <div class="mt-4 overflow-x-auto">
+      <table class="w-full text-left text-sm">
+        <thead><tr class="text-gold"><th class="border-b border-zinc-700 py-2">Class</th><th class="border-b border-zinc-700 py-2">Attribute / Method</th><th class="border-b border-zinc-700 py-2">หน้าที่</th></tr></thead>
+        <tbody class="text-zinc-300">
+          <tr><td class="py-1.5 pr-2 font-bold">Person <span class="code-chip">Person.ts</span></td><td class="pr-2">id, name / getId, getName, <b>getRole()*</b></td><td class="text-zinc-400">แม่แบบคนในระบบ</td></tr>
+          <tr><td class="py-1.5 pr-2 font-bold">Customer</td><td class="pr-2">phone, points / getPhone, addPoints</td><td class="text-zinc-400">ผู้จอง</td></tr>
+          <tr><td class="py-1.5 pr-2 font-bold">Barber</td><td class="pr-2">specialty / getSpecialty</td><td class="text-zinc-400">ช่างตัดผม</td></tr>
+          <tr><td class="py-1.5 pr-2 font-bold">Service</td><td class="pr-2">name, price, duration / getters</td><td class="text-zinc-400">บริการ + ราคา</td></tr>
+          <tr><td class="py-1.5 pr-2 font-bold">Booking</td><td class="pr-2">id, customer, service, barber, date, time, status / calculateTotalPrice, getDetails</td><td class="text-zinc-400">คิวจอง 1 ใบ</td></tr>
+          <tr><td class="py-1.5 pr-2 font-bold">BarberShop</td><td class="pr-2">bookings[] / add, cancel, search, isSlotAvailable, getRevenue</td><td class="text-zinc-400">ผู้จัดการคิวทั้งหมด</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 6 : ENCAP + INHERIT ============ -->
+  <section class="slide rounded-2xl border border-zinc-800 bg-card p-8 shadow-xl">
+    <h2 class="text-2xl font-extrabold text-gold">5️⃣ OOP ① Encapsulation + ② Inheritance</h2>
+    <div class="mt-4 grid gap-4 md:grid-cols-2">
+      <div class="rounded-xl border border-emerald-500/40 bg-zinc-900 p-4">
+        <h3 class="font-bold text-emerald-300">🔒 Encapsulation — ซ่อนข้อมูล + เข้าผ่าน getter</h3>
+        <ul class="mt-2 space-y-2 text-sm text-zinc-300">
+          <li><span class="tick">✓</span> <span class="code-chip">Person.ts:4-5</span> <span class="code-chip">private id / protected name</span></li>
+          <li><span class="tick">✓</span> <span class="code-chip">Customer.ts:6-7</span> private phone, loyaltyPoints → <span class="code-chip">:19-29</span> getters</li>
+          <li><span class="tick">✓</span> <span class="code-chip">Service.ts:3-5 → :13-23</span> อ่านราคา/ชื่อผ่าน getter เท่านั้น</li>
+          <li><span class="tick">✓</span> <span class="code-chip">Booking.ts:8-15</span> + <span class="code-chip">BarberShop.ts:6</span> ซ่อน array bookings</li>
+        </ul>
+      </div>
+      <div class="rounded-xl border border-sky-500/40 bg-zinc-900 p-4">
+        <h3 class="font-bold text-sky-300">🌳 Inheritance — สืบทอด ≥1 (เรามี 2)</h3>
+        <ul class="mt-2 space-y-2 text-sm text-zinc-300">
+          <li><span class="tick">✓</span> <span class="code-chip">Customer.ts:4</span> <span class="code-chip">class Customer extends Person</span> + <span class="code-chip">:10 super()</span></li>
+          <li><span class="tick">✓</span> <span class="code-chip">Barber.ts:4</span> <span class="code-chip">class Barber extends Person</span> + <span class="code-chip">:9 super()</span></li>
+          <li class="text-zinc-400">ลูกได้ <b>getId/getName</b> ฟรีจากแม่ ไม่เขียนซ้ำ — ลด duplication สมเหตุสมผล (คน 2 ประเภทในระบบจริง)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 7 : POLY + ABSTRACTION ============ -->
+  <section class="slide rounded-2xl border border-zinc-800 bg-card p-8 shadow-xl">
+    <h2 class="text-2xl font-extrabold text-gold">6️⃣ OOP ③ Polymorphism + ④ Abstraction</h2>
+    <div class="mt-4 grid gap-4 md:grid-cols-2">
+      <div class="rounded-xl border border-violet-500/40 bg-zinc-900 p-4">
+        <h3 class="font-bold text-violet-300">🎭 Polymorphism — 2 รูปแบบ</h3>
+        <ul class="mt-2 space-y-2 text-sm text-zinc-300">
+          <li><span class="tick">✓</span> <b>Override:</b> <span class="code-chip">Customer.ts:15-17</span> getRole() → “ลูกค้า”</li>
+          <li><span class="tick">✓</span> <b>Override:</b> <span class="code-chip">Barber.ts:14-16</span> getRole() → “ช่าง (specialty)”</li>
+          <li><span class="tick">✓</span> <b>Overload:</b> <span class="code-chip">Booking.ts:40-48</span> getDetails() / getDetails(short)</li>
+          <li class="text-zinc-400">เมธอดชื่อเดียว พฤติกรรมต่างตามคลาส/พารามิเตอร์ — ใช้จริงตอน render การ์ด Admin <span class="code-chip">main.ts:309</span></li>
+        </ul>
+      </div>
+      <div class="rounded-xl border border-amber-500/40 bg-zinc-900 p-4">
+        <h3 class="font-bold text-amber-300">�stract Abstraction — ซ่อนความซับซ้อน</h3>
+        <ul class="mt-2 space-y-2 text-sm text-zinc-300">
+          <li><span class="tick">✓</span> <span class="code-chip">Person.ts:2</span> abstract class (new ตรงๆ ไม่ได้) + <span class="code-chip">:21 abstract getRole()</span> บังคับลูก implement</li>
+          <li><span class="tick">✓</span> <span class="code-chip">BarberShop.ts:38-46</span> isSlotAvailable() — ผู้เรียกไม่ต้องรู้ logic กันชน</li>
+          <li><span class="tick">✓</span> <span class="code-chip">BarberShop.ts:70-74</span> getRevenue() — ซ่อน filter + reduce</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 8 : DEMO + SUMMARY ============ -->
+  <section class="slide rounded-2xl border border-gold/40 bg-card p-8 shadow-xl">
+    <h2 class="text-2xl font-extrabold text-gold">7️⃣ เดโม่ + สรุป <span class="text-sm font-normal text-zinc-400">Demo & Conclusion</span></h2>
+    <div class="mt-4 grid gap-4 md:grid-cols-2">
+      <div class="rounded-xl border border-zinc-700 bg-zinc-900 p-4 text-sm">
+        <h3 class="font-bold">🎬 สคริปต์เดโม่ (2 นาที)</h3>
+        <ol class="mt-2 list-decimal space-y-1 pl-5 text-zinc-300">
+          <li>ฝั่งลูกค้า: กดช่องเขียว → ฟอร์มเติมเอง → <b>ยืนยันจอง</b></li>
+          <li>ลองจองเวลาชน → โดนบล็อก <span class="code-chip">คิวชน!</span></li>
+          <li>ฝั่ง Admin: PIN <span class="code-chip">123456</span> → รับตัด → เสร็จแล้ว</li>
+          <li>โชว์ค้นหา + รายได้ + สลับ 🌙/☀️</li>
+        </ol>
+      </div>
+      <div class="rounded-xl border border-zinc-700 bg-zinc-900 p-4 text-sm">
+        <h3 class="font-bold">🏆 ครบเกณฑ์ 20 คะแนน</h3>
+        <ul class="mt-2 space-y-1 text-zinc-300">
+          <li><span class="tick">✓</span> OOP 4 หลัก + ระบุคลาส/บรรทัดได้</li>
+          <li><span class="tick">✓</span> 6 คลาส + สืบทอด 2 เส้น</li>
+          <li><span class="tick">✓</span> ฟีเจอร์ครบ + ไม่ crash + มี validate</li>
+          <li><span class="tick">✓</span> GUI 2 ฝั่ง + โหมดมืด/สว่าง</li>
+        </ul>
+        <p class="mt-3 text-zinc-400">🔗 GitHub: <span class="code-chip">ส่ง link ใน Google Sheet (MSTeams)</span></p>
+        <p class="mt-1 text-zinc-400">👥 อภิรักษ์ 68025517 • วัชพรงษ์ 68023470</p>
+      </div>
+    </div>
+    <div class="mt-6 rounded-2xl border border-gold/60 bg-gradient-to-r from-gold/20 via-gold/10 to-gold/20 px-6 py-6 text-center">
+      <div class="text-5xl">🙏</div>
+      <p class="mt-2 text-4xl font-extrabold tracking-wide text-gold md:text-5xl">ขอบคุณครับ</p>
+      <p class="mt-1 text-sm tracking-widest text-zinc-300">THANK YOU — พร้อมตอบคำถามครับ</p>
+    </div>
+  </section>
+
+  <!-- Nav -->
+  <div class="no-print mt-4 flex items-center justify-between">
+    <button onclick="move(-1)" class="rounded-full border border-zinc-600 px-6 py-2.5 font-bold hover:bg-zinc-800">◀ ก่อนหน้า</button>
+    <div id="dots" class="flex gap-2"></div>
+    <button onclick="move(1)" class="rounded-full bg-gold px-6 py-2.5 font-bold text-black hover:brightness-110">ถัดไป ▶</button>
+  </div>
+  <p class="mt-3 text-center text-xs text-zinc-500">กด ← → / Space เพื่อเปลี่ยนสไลด์ • 🖨️ Print เพื่อออก PDF • PIN Admin: 123456</p>
+</div>
+
+<script>
+let cur = 0;
+const slides = document.querySelectorAll('.slide');
+const counter = document.getElementById('counter');
+const progress = document.getElementById('progress');
+const dots = document.getElementById('dots');
+slides.forEach((_, i) => {
+  const d = document.createElement('button');
+  d.className = 'h-2.5 w-2.5 rounded-full bg-zinc-600';
+  d.title = 'ไปสไลด์ ' + (i + 1);
+  d.onclick = () => show(i);
+  dots.appendChild(d);
+});
+function show(i) {
+  cur = (i + slides.length) % slides.length;
+  slides.forEach((s, k) => s.classList.toggle('active', k === cur));
+  counter.textContent = (cur + 1) + ' / ' + slides.length;
+  progress.style.width = ((cur + 1) / slides.length * 100) + '%';
+  [...dots.children].forEach((d, k) => d.style.background = k === cur ? '#C9A227' : '#52525b');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function move(n) { show(cur + n); }
+function toggleFull() {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
+  else document.exitFullscreen();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); move(1); }
+  if (e.key === 'ArrowLeft') move(-1);
+});
+show(0);
+</script>
+</body>
+</html>
